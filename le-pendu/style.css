@@ -1,0 +1,55 @@
+body {
+	font-family: Arial, Helvetica;
+	background-color: #dd85f8;
+	text-align: center;
+	overflow: hidden;
+}
+
+.board {
+	display: table;
+    margin: 0 auto;
+	margin-top: 1rem;
+	margin-bottom: 1rem;
+	border-collapse:separate;
+	border-spacing: 4pt;
+}
+
+.board>div {
+	background-color: #f8f8d8;
+	width: 33pt;
+	height: 44pt;
+	font-size: 24pt;
+	font-weight: bold;
+	display: table-cell;
+	text-align: center;
+	vertical-align: middle;
+	border: solid 1pt black;
+	border-radius: 4pt;
+}
+
+#mot {
+	color: blue;
+}
+
+#lettres {
+	color: red;
+}
+
+canvas {
+	background: #a9f8ac;
+	padding: 0;
+	margin: 0 auto;
+	margin-top: 1rem;
+	margin-bottom: 1rem;
+	display: block;
+	border: solid 1pt black;
+	border-radius:4pt;
+}
+
+.tooltiptext{
+	visibility: hidden;
+}
+
+.tooltip:hover .tooltiptext {
+	visibility: visible;
+}
