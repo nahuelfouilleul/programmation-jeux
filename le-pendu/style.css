@@ -1,8 +1,8 @@
 body {
 	font-family: Arial, Helvetica;
-	background-color: #dd85f8;
+	background-color: #bac5cf;
 	text-align: center;
-	overflow: hidden;
+	overflow-x: hidden;
 }
 
 .board {
@@ -36,20 +36,25 @@ body {
 }
 
 canvas {
-	background: #a9f8ac;
+	background: #9fdbc5;
 	padding: 0;
 	margin: 0 auto;
 	margin-top: 1rem;
 	margin-bottom: 1rem;
 	display: block;
-	border: solid 1pt black;
-	border-radius:4pt;
+	border: solid 4pt #53a5c3;
 }
 
 .tooltiptext{
 	visibility: hidden;
 }
 
-.tooltip:hover .tooltiptext {
+.tooltip:hover + .tooltiptext {
 	visibility: visible;
+	background-color: #cc0;
+}
+
+.tooltip{
+	display: table;
+	margin: 0 auto;
 }
