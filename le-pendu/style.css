@@ -51,7 +51,7 @@ canvas {
 
 .tooltip:hover + .tooltiptext {
 	visibility: visible;
-	background-color: #cc0;
+	/* background-color: #cc0; */
 }
 
 .tooltip{

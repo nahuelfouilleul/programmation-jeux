@@ -115,8 +115,6 @@ function initVars(jcv) {
 	dst=r1/153*dst;
 }
 
-const visibleBeforeAnimate=false;
-
 function drawBack(jcv) {
 	initVars(jcv);
 	jcv.clearCanvas();
