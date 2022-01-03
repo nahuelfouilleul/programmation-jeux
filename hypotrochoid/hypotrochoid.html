@@ -5,37 +5,38 @@
 <script src="../jcanvas-21.0.1.min.js" ></script>
 <script src="script.js" charset="UTF-8" ></script>
 </head>
-<body>
+<body style="background-image:url(triangle.svg);background-repeat: no-repeat;">
 
 <div class="container">
 <div title="The number of vertices is also the number of turns inside the ring in a cycle" class="table-cell">
-<input type="checkbox" name="draw-fig1" checked ></input>
-<label for="fig1">1<sup>st</sup> figure </label><select id="fig1" name="fig1" >
+<label for="fig1">1<sup>st</sup> figure </label>
+<input type="checkbox" name="draw-fig1"  onchange="drawF()"></input><select id="fig1" name="fig1" >
 <option value="0"></option><option value="3">Triangle</option><option value="4">Square</option>
 <option value="5">Pentagon</option><option value="6">Hexagon</option><option value="7">Heptagon</option>
-<option value="8">Octogon</option><option value="9">Nonagone/Enneagon</option><option value="10">Decagon</option>
+<option value="8">Octagon</option><option value="9">Nonagon</option><option value="10">Decagon</option>
 </select>
 </div>
 <div title="The number of vertices is also the number of revolutions of the wheel in a cycle" class="table-cell">
-<input type="checkbox" name="draw-fig2" checked ></input>
-<label for="fig2">2<sup>nd</sup> figure </label><select id="fig2" name="fig2" >
+<label for="fig2">2<sup>nd</sup> figure </label>
+<input type="checkbox" name="draw-fig2"  onchange="drawF()"></input><select id="fig2" name="fig2" >
 <option value="0"></option><option value="3">Triangle</option><option value="4">Square</option>
 <option value="5">Pentagon</option><option value="6">Hexagon</option><option value="7">Heptagon</option>
-<option value="8">Octogon</option><option value="9">Nonagone/Enneagon</option><option value="10">Decagon</option>
+<option value="8">Octagon</option><option value="9">Nonagon</option><option value="10">Decagon</option>
 </select>
 </div>
 <div title="The total is also the number revolutions of the wheel on the ring base in a cycle" class="table-cell">
 <label for="total">Number of branches </label><input id="total" readonly></input>
 </div>
 <div title="The distance from the ring" class="table-cell">
-<label for="distance">Distance </label><input id="distance" type="number" value="18" onchange="draw()"></input>
+<label for="distance">Distance </label><input id="distance" type="number" value="12" onchange="draw()"></input>
 </div>
 </div>
 
 <div class="container">
-<div><input type="checkbox" name="draw-path" checked onchange="draw()">Path</input></div>
-<div><input type="checkbox" name="draw-wheels" checked >Wheels</input></div>
-<div><input type="checkbox" name="draw-points" checked >Points</input></div>
+<div><input type="checkbox" name="draw-points" checked onchange="drawF()">Dots</input></div>
+<div><input type="checkbox" name="draw-path"  onchange="draw()">Path</input></div>
+<div><input type="checkbox" name="draw-wheels"  onchange="drawF()">Wheels</input></div>
+<div><input type="checkbox" name="single"  onchange="drawF()">Single</input></div>
 <div>
 <label for="delay">Delay(ms) </label><select id="delay"><option>40</option><option selected>160</option><option>640</option></select></input>
 </div>
@@ -45,6 +46,7 @@
 
 <div class="container">
 <div id="cvlh">Normal</div>
+<div></div>
 <div id="cvrh">Dual</div>
 </div>
 

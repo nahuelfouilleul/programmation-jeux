@@ -27,8 +27,12 @@ input{
 	width: 48pt;
 }
 
+input:read-only{
+	background-color: #ccc;
+}
+
 select{
-	width: 60pt;
+	width: 80pt;
 }
 
 canvas.l {

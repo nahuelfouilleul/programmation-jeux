@@ -6,7 +6,7 @@ var gcd=function(a,b) {
 }
 
 const tau=Math.PI*2;
-var fig1,fig2,total,p,q,ratio;
+var fig1,fig2,total,p,q,ratio,t=0;
 
 function drawHypo(jcv) {
 	let hypoPath={type:'line'};
@@ -27,6 +27,8 @@ function drawFront(jcv) {
 	jcv.clearCanvas();
 	let th=tau*p*t/n;
 
+	let single=$('input[name="single"]').is(':checked');
+
 	// all vertices
 	let pvs=[];
 	let xc0,yc0;
@@ -42,7 +44,7 @@ function drawFront(jcv) {
 		let angle2=angle*(r1-r2)/r2;
 
 		// draw wheels
-		if( $('input[name="draw-wheels"]').is(':checked')) {
+		if( $('input[name="draw-wheels"]').is(':checked') && !(single&&wh) ) {
 			jcv.drawArc({fillStyle:'rgba(120,120,120,0.2)',x:xcw,y:ycw,radius:r2});
 		}
 		for (let s=0;s<p;s+=1) {
@@ -52,23 +54,26 @@ function drawFront(jcv) {
 			} else {
 				pvs[wh*p+s]=[pvs[s][0]+xcw-xc0,pvs[s][1]+ycw-yc0];
 			}
-			if( $('input[name="draw-points"]').is(':checked')) {
-				jcv.drawArc({fillStyle:'rgba(0,0,0,0.5)',x:pvs[wh*p+s][0],y:pvs[wh*p+s][1],radius:4});
+			// draw dots
+			if( $('input[name="draw-points"]').is(':checked') && !(single&&(wh&&s))) {
+				jcv.drawArc({fillStyle:'rgba(0,0,0,0.4)',x:pvs[wh*p+s][0],y:pvs[wh*p+s][1],radius:6});
 			}
 		}
 	}
-
 	// draw fig1
 	if( $('input[name="draw-fig1"]').is(':checked')) {
 		let fig1={strokeStyle:'#63c',strokeWidth:1};
-		for(let wh=1;wh<=q;wh+=1){
+		for(let wh=0;wh<q;wh+=1){
+			if (single&&wh) {
+				continue;
+			}
 			let path={type:'line'};
 			for (let s=1;s<=p+1;s+=1) {
-				let pv=pvs[(wh%q)*p+s%p];
+				let pv=pvs[wh*p+s%p];
 				path['x'+s]=pv[0];
 				path['y'+s]=pv[1];
 			}
-			fig1['p'+wh]=path;
+			fig1['p'+(wh+1)]=path;
 		}
 		jcv.drawPath(fig1);
 	}
@@ -76,14 +81,17 @@ function drawFront(jcv) {
 	// draw fig2
 	if( $('input[name="draw-fig2"]').is(':checked')) {
 		let fig2={strokeStyle:'#39f',strokeWidth:1};
-		for(let s=1;s<=p;s+=1){
+		for(let s=0;s<p;s+=1){
+			if (single&&s) {
+				continue;
+			}
 			let path={type:'line'};
 			for (let wh=1;wh<=q+1;wh+=1) {
-				let pv=pvs[(wh%q)*p+s%p];
+				let pv=pvs[(wh%q)*p+s];
 				path['x'+wh]=pv[0];
 				path['y'+wh]=pv[1];
 			}
-			fig2['p'+s]=path;
+			fig2['p'+(s+1)]=path;
 		}
 		jcv.drawPath(fig2);
 	}
@@ -104,7 +112,7 @@ function initVars(jcv) {
 	r2=r1*ratio;
 
 	// scale distance relatively to r2
-	dst=r2/153*dst;
+	dst=r1/153*dst;
 }
 
 const visibleBeforeAnimate=false;
@@ -112,10 +120,17 @@ const visibleBeforeAnimate=false;
 function drawBack(jcv) {
 	initVars(jcv);
 	jcv.clearCanvas();
-	jcv.drawArc({strokeStyle:'#000',strokeWidth:1,x:xc,y:yc,radius:r1});
+	jcv.drawArc({strokeStyle:'#000',fillStyle:(p==fig1?'#fff':'#ffc'),strokeWidth:1,x:xc,y:yc,radius:r1});
 	if( $('input[name="draw-path"]').is(':checked')) {
 		drawHypo(jcv);
 	}
+}
+
+function drawF() {
+	p=fig1;
+	drawFront($(cvfl));
+	p=fig2;
+	drawFront($(cvfr));
 }
 
 function draw() {
@@ -123,6 +138,7 @@ function draw() {
 	drawBack($(cvbl));
 	p=fig2;
 	drawBack($(cvbr));
+	drawF();
 }
 
 function start() {
@@ -133,15 +149,10 @@ function start() {
 
 function step() {
 	if(stopped){
-		$(cvfl).clearCanvas();
-		$(cvfr).clearCanvas();
 		return;
 	}
 	
-	p=fig1;
-	drawFront($(cvfl));
-	p=fig2;
-	drawFront($(cvfr));
+	drawF();
 
 	t+=1;t%=n;
 	setTimeout(step,delay);
@@ -183,5 +194,11 @@ $(document).ready(function() {
 		Array.prototype.forEach.call($('#fig1')[0].options, filterFig(fig2));
 		updateTotal();
 	});
+
+	$('#fig1').val('3').change();
+	$('#fig2').val('4').change();
+	//fig1=3;fig2=4;updateTotal();
+	draw();start();
+
 });
 
