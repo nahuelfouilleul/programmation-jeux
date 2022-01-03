@@ -45,7 +45,13 @@ function drawFront(jcv) {
 
 		// draw wheels
 		if( $('input[name="draw-wheels"]').is(':checked') && !(single&&wh) ) {
-			jcv.drawArc({fillStyle:'rgba(120,120,120,0.2)',x:xcw,y:ycw,radius:r2});
+			jcv.drawArc({fillStyle:'rgba(51,255,51,0.1)',x:xcw,y:ycw,radius:r2});
+			// draw radius
+			if (single) {
+				jcv.drawLine({strokeStyle:'#3f3',strokeWidth:1,x1:xcw,y1:ycw,
+					x2:xcw-r2*Math.sin(angle2+tau/p),
+					y2:ycw-r2*Math.cos(angle2+tau/p)});
+			}
 		}
 		for (let s=0;s<p;s+=1) {
 			if (wh===0) {
@@ -62,7 +68,7 @@ function drawFront(jcv) {
 	}
 	// draw fig1
 	if( $('input[name="draw-fig1"]').is(':checked')) {
-		let fig1={strokeStyle:'#63c',strokeWidth:1};
+		let pfig1={strokeStyle:'#63c',strokeWidth:1};
 		for(let wh=0;wh<q;wh+=1){
 			if (single&&wh) {
 				continue;
@@ -73,27 +79,45 @@ function drawFront(jcv) {
 				path['x'+s]=pv[0];
 				path['y'+s]=pv[1];
 			}
-			fig1['p'+(wh+1)]=path;
+			pfig1['p'+(wh+1)]=path;
 		}
-		jcv.drawPath(fig1);
+		jcv.drawPath(pfig1);
 	}
 
 	// draw fig2
 	if( $('input[name="draw-fig2"]').is(':checked')) {
-		let fig2={strokeStyle:'#39f',strokeWidth:1};
+		let pfig2={strokeStyle:'#39f',strokeWidth:1};
 		for(let s=0;s<p;s+=1){
 			if (single&&s) {
 				continue;
 			}
 			let path={type:'line'};
+			let sumX=0;
+			let sumY=0;
 			for (let wh=1;wh<=q+1;wh+=1) {
 				let pv=pvs[(wh%q)*p+s];
 				path['x'+wh]=pv[0];
 				path['y'+wh]=pv[1];
+				if(wh<=q){
+					sumX+=pv[0];
+					sumY+=pv[1];
+				}
 			}
-			fig2['p'+(s+1)]=path;
+			pfig2['p'+(s+1)]=path;
+			// draw second wheel radius
+			if (single) {
+				let cf2x=sumX/q;
+				let cf2y=sumY/q;
+				let rf2=r1-r2+dst;
+				let fact=rf2/((pvs[p+s][0]-cf2x)**2+(pvs[p+s][1]-cf2y)**2)**.5;
+				jcv.drawArc({fillStyle:'rgba(255,51,51,0.1)',x:cf2x,y:cf2y,
+					radius:r1-r2+dst});
+				jcv.drawLine({strokeStyle:'#f33',strokeWidth:1,x1:cf2x,y1:cf2y,
+					x2:cf2x+fact*(pvs[p+s][0]-cf2x),
+					y2:cf2y+fact*(pvs[p+s][1]-cf2y)});
+			}
 		}
-		jcv.drawPath(fig2);
+		jcv.drawPath(pfig2);
 	}
 
 }
@@ -118,7 +142,7 @@ function initVars(jcv) {
 function drawBack(jcv) {
 	initVars(jcv);
 	jcv.clearCanvas();
-	jcv.drawArc({strokeStyle:'#000',fillStyle:(p==fig1?'#fff':'#ffc'),strokeWidth:1,x:xc,y:yc,radius:r1});
+	jcv.drawArc({strokeStyle:'#000',fillStyle:(p==fig1?'#eff':'#ffe'),strokeWidth:1,x:xc,y:yc,radius:r1});
 	if( $('input[name="draw-path"]').is(':checked')) {
 		drawHypo(jcv);
 	}

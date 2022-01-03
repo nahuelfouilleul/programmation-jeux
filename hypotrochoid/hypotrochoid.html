@@ -36,7 +36,7 @@
 <div><input type="checkbox" name="draw-points" checked onchange="drawF()">Dots</input></div>
 <div><input type="checkbox" name="draw-path"  onchange="draw()">Path</input></div>
 <div><input type="checkbox" name="draw-wheels"  onchange="drawF()">Wheels</input></div>
-<div><input type="checkbox" name="single"  onchange="drawF()">Single</input></div>
+<div hidden><input type="checkbox" name="single" onchange="drawF()">Single</input></div>
 <div>
 <label for="delay">Delay(ms) </label><select id="delay"><option>40</option><option selected>160</option><option>640</option></select></input>
 </div>
@@ -77,5 +77,13 @@ function setCanvasSize() {
 }
 setCanvasSize();
 window.addEventListener('resize',setCanvasSize);
+var params=new URLSearchParams(window.location.href);
+$('input[name="draw-wheels"]')[0].checked=params.has('wheels');
+$('input[name="draw-fig1"]')[0].checked=params.has('fig1');
+$('input[name="draw-fig2"]')[0].checked=params.has('fig2');
+$('input[name="draw-path"]')[0].checked=params.has('path');
+$('input[name="draw-points"]')[0].checked=!params.has('no-dots');
+$('input[name="single"]')[0].checked=params.has('single');
+params.has('d')&&$('#distance').val(params.get('d'));
 </script>
 </body>
