@@ -1,0 +1,40 @@
+body {
+	font-family: Arial, Helvetica;
+	text-align: center;
+	font-size: 12pt;
+}
+
+.table {
+	display: table;
+	border-spacing: 32pt 4pt;
+}
+.table-cell {
+	display: table-cell;
+}
+
+.container {
+	display: flex;
+	justify-content: space-evenly;
+}
+
+canvas {
+	padding: 0;
+	position: absolute;
+	background-color: transparent;
+}
+
+input{
+	width: 48pt;
+}
+
+select{
+	width: 60pt;
+}
+
+canvas.l {
+	right: 52vw;
+}
+
+canvas.r {
+	left: 52vw;
+}
