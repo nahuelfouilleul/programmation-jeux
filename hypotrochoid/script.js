@@ -28,10 +28,11 @@ function drawFront(jcv) {
 	let th=tau*p*t/n;
 
 	let single=$('input[name="single"]').is(':checked');
+	let drawWheels=$('input[name="draw-wheels"]').is(':checked');
 
 	// all vertices
 	let pvs=[];
-	let xc0,yc0;
+	let xc0,yc0,txc0,tyc0;
 	// center wheels
 	for(let wh=0;wh<q;wh+=1){
 		let angle=th+tau*wh/q;
@@ -43,16 +44,6 @@ function drawFront(jcv) {
 		}
 		let angle2=angle*(r1-r2)/r2;
 
-		// draw wheels
-		if( $('input[name="draw-wheels"]').is(':checked') && !(single&&wh) ) {
-			jcv.drawArc({fillStyle:'rgba(51,255,51,0.1)',x:xcw,y:ycw,radius:r2});
-			// draw radius
-			if (single) {
-				jcv.drawLine({strokeStyle:'#3f3',strokeWidth:1,x1:xcw,y1:ycw,
-					x2:xcw-r2*Math.sin(angle2+tau/p),
-					y2:ycw-r2*Math.cos(angle2+tau/p)});
-			}
-		}
 		for (let s=0;s<p;s+=1) {
 			if (wh===0) {
 				let angle3=angle2+tau*s/p;
@@ -65,19 +56,40 @@ function drawFront(jcv) {
 				jcv.drawArc({fillStyle:'rgba(0,0,0,0.4)',x:pvs[wh*p+s][0],y:pvs[wh*p+s][1],radius:6});
 			}
 		}
+		// draw wheels
+		if( drawWheels && !(single&&wh) ) {
+			jcv.drawArc({fillStyle:'rgba(51,204,102,0.25)',x:xcw,y:ycw,radius:r2});
+			// draw radius
+			if (single) {
+				// draw second ring wheel and radius
+				let tdst=dst*(r2-r1)/r2;
+				let tr1=r1-dst*r1/r2;
+				let tr2=r1-r2+tdst;
+				let tangle=-tau*q*t/n;
+				txc0=xc+(tr1-tr2)*Math.sin(tangle);
+				tyc0=yc-(tr1-tr2)*Math.cos(tangle);
+				let tangle2=tangle*(tr1-tr2)/tr2;
+				jcv.drawArc({strokeStyle:'rgba(0,0,0,0.25)',strokeWidth:1,x:xc,y:yc,radius:tr1});
+				jcv.drawArc({fillStyle:'rgba(51,153,255,0.25)',x:txc0,y:tyc0,radius:tr2});
+			}
+		}
 	}
 	// draw fig1
 	if( $('input[name="draw-fig1"]').is(':checked')) {
-		let pfig1={strokeStyle:'#63c',strokeWidth:1};
+		let pfig1={strokeStyle:'#3c6',strokeWidth:1};
 		for(let wh=0;wh<q;wh+=1){
 			if (single&&wh) {
 				continue;
 			}
 			let path={type:'line'};
 			for (let s=1;s<=p+1;s+=1) {
-				let pv=pvs[wh*p+s%p];
+				let pv=pvs[(wh%q)*p+(s%p)];
 				path['x'+s]=pv[0];
 				path['y'+s]=pv[1];
+				if(single){
+					// draw radius
+					pfig1['p'+(1+s)]={type:'line',x1:xc0,y1:yc0,x2:pv[0],y2:pv[1]};
+				}
 			}
 			pfig1['p'+(wh+1)]=path;
 		}
@@ -92,30 +104,17 @@ function drawFront(jcv) {
 				continue;
 			}
 			let path={type:'line'};
-			let sumX=0;
-			let sumY=0;
 			for (let wh=1;wh<=q+1;wh+=1) {
 				let pv=pvs[(wh%q)*p+s];
 				path['x'+wh]=pv[0];
 				path['y'+wh]=pv[1];
-				if(wh<=q){
-					sumX+=pv[0];
-					sumY+=pv[1];
+				if(single){
+					// draw radius
+					pfig2['p'+(1+wh)]={type:'line',x1:txc0,y1:tyc0,x2:pv[0],y2:pv[1]};
 				}
 			}
 			pfig2['p'+(s+1)]=path;
-			// draw second wheel radius
-			if (single) {
-				let cf2x=sumX/q;
-				let cf2y=sumY/q;
-				let rf2=r1-r2+dst;
-				let fact=rf2/((pvs[p+s][0]-cf2x)**2+(pvs[p+s][1]-cf2y)**2)**.5;
-				jcv.drawArc({fillStyle:'rgba(255,51,51,0.1)',x:cf2x,y:cf2y,
-					radius:r1-r2+dst});
-				jcv.drawLine({strokeStyle:'#f33',strokeWidth:1,x1:cf2x,y1:cf2y,
-					x2:cf2x+fact*(pvs[p+s][0]-cf2x),
-					y2:cf2y+fact*(pvs[p+s][1]-cf2y)});
-			}
+
 		}
 		jcv.drawPath(pfig2);
 	}
@@ -219,8 +218,7 @@ $(document).ready(function() {
 
 	$('#fig1').val('3').change();
 	$('#fig2').val('4').change();
-	//fig1=3;fig2=4;updateTotal();
+
 	draw();start();
 
 });
-
