@@ -5,7 +5,7 @@
 <script src="../jcanvas-21.0.1.min.js" ></script>
 <script src="script.js" charset="UTF-8" ></script>
 </head>
-<body style="background-image:url(triangle.svg);background-repeat: no-repeat;">
+<body >
 
 <div class="container">
 <div title="The number of vertices is also the number of turns inside the ring in a cycle" class="table-cell">
@@ -34,9 +34,9 @@
 
 <div class="container">
 <div><input type="checkbox" name="draw-points" checked onchange="drawF()">Dots</input></div>
-<div><input type="checkbox" name="draw-path"  onchange="draw()">Path</input></div>
-<div><input type="checkbox" name="draw-wheels"  onchange="drawF()">Wheels</input></div>
-<div hidden><input type="checkbox" name="single" onchange="drawF()">Single</input></div>
+<div><input type="checkbox" name="draw-path" onchange="draw()">Path</input></div>
+<div><input type="checkbox" name="draw-wheels" onchange="drawF()">Wheels</input></div>
+<div><input type="checkbox" name="single" onchange="drawF()">Single</input></div>
 <div>
 <label for="delay">Delay(ms) </label><select id="delay"><option>40</option><option selected>160</option><option>640</option></select></input>
 </div>
