@@ -7,19 +7,20 @@ var gcd=function(a,b) {
 
 const tau=Math.PI*2;
 var fig1,fig2,total,p,q,ratio,t=0;
+var single,drawDots,drawPath,drawWheels,drawFig1,drawFig2;
 
 function drawHypo(jcv) {
 	let hypoPath={type:'line'};
 	for(let t=0;t<=n;t+=1){
 		let th=tau*p*t/n;
-		let xcw=xc+(r1-r2)*Math.sin(th);
-		let ycw=yc-(r1-r2)*Math.cos(th);
+		let xcw=xc+r1*Math.sin(th);
+		let ycw=yc-r1*Math.cos(th);
 
-		let angle2=th*(r1-r2)/r2;
-		hypoPath['x'+(t+1)]=xcw-(r2-dst)*Math.sin(angle2);
-		hypoPath['y'+(t+1)]=ycw-(r2-dst)*Math.cos(angle2);
+		let th2=th*r1/r2;
+		hypoPath['x'+(t+1)]=xcw-dst*Math.sin(th2);
+		hypoPath['y'+(t+1)]=ycw-dst*Math.cos(th2);
 	}
-	jcv.drawPath({strokeStyle:'#f00',strokeWidth:.5,p1:hypoPath});
+	jcv.drawPath({strokeStyle:'#f63',strokeWidth:1.5,p1:hypoPath});
 }
 
 function drawFront(jcv) {
@@ -27,58 +28,49 @@ function drawFront(jcv) {
 	jcv.clearCanvas();
 	let th=tau*p*t/n;
 
-	let single=$('input[name="single"]').is(':checked');
-	let drawWheels=$('input[name="draw-wheels"]').is(':checked');
-
 	// all vertices
 	let pvs=[];
 	let xc0,yc0,txc0,tyc0;
 	// center wheels
 	for(let wh=0;wh<q;wh+=1){
-		let angle=th+tau*wh/q;
-		let xcw=xc+(r1-r2)*Math.sin(angle);
-		let ycw=yc-(r1-r2)*Math.cos(angle);
+		let th1=th+tau*wh/q;
+		let xcw=xc+r1*Math.sin(th1);
+		let ycw=yc-r1*Math.cos(th1);
 		if (wh===0) {
 			xc0=xcw;
 			yc0=ycw;
 		}
-		let angle2=angle*(r1-r2)/r2;
+		let th2=th1*r1/r2;
 
 		for (let s=0;s<p;s+=1) {
+			let xd,yd;
 			if (wh===0) {
-				let angle3=angle2+tau*s/p;
-				pvs[wh*p+s]=[xcw-(r2-dst)*Math.sin(angle3),ycw-(r2-dst)*Math.cos(angle3)];
+				let th3=th2+tau*s/p;
+				pvs[wh*p+s]=[xd=xcw-dst*Math.sin(th3),yd=ycw-dst*Math.cos(th3)];
 			} else {
-				pvs[wh*p+s]=[pvs[s][0]+xcw-xc0,pvs[s][1]+ycw-yc0];
+				pvs[wh*p+s]=[xd=pvs[s][0]+xcw-xc0,yd=pvs[s][1]+ycw-yc0];
 			}
 			// draw dots
-			if( $('input[name="draw-points"]').is(':checked') && !(single&&(wh&&s))) {
-				jcv.drawArc({fillStyle:'rgba(0,0,0,0.4)',x:pvs[wh*p+s][0],y:pvs[wh*p+s][1],radius:6});
+			if( drawDots && !(single&&drawWheels&&wh&&s)) {
+				jcv.drawArc({fillStyle:'rgba(0,0,0,0.4)',x:xd,y:yd,radius:6});
 			}
 		}
 		// draw wheels
 		if( drawWheels && !(single&&wh) ) {
-			jcv.drawArc({fillStyle:'rgba(51,204,102,0.25)',x:xcw,y:ycw,radius:r2});
-			// draw radius
+			jcv.drawArc({fillStyle:'rgba(102,51,204,0.3)',x:xcw,y:ycw,radius:r2});
 			if (single) {
-				// draw second ring wheel and radius
-				let tdst=dst*(r2-r1)/r2;
-				let tr1=r1-dst*r1/r2;
-				let tr2=r1-r2+tdst;
-				let tangle=-tau*q*t/n;
-				txc0=xc+(tr1-tr2)*Math.sin(tangle);
-				tyc0=yc-(tr1-tr2)*Math.cos(tangle);
-				let tangle2=tangle*(tr1-tr2)/tr2;
-				jcv.drawArc({strokeStyle:'rgba(0,0,0,0.25)',strokeWidth:1,x:xc,y:yc,radius:tr1});
-				jcv.drawArc({fillStyle:'rgba(51,153,255,0.25)',x:txc0,y:tyc0,radius:tr2});
+				// draw second wheel
+				let tth1=-tau*q*t/n;
+				txc0=xc+dst*Math.sin(tth1);
+				tyc0=yc-dst*Math.cos(tth1);
+				jcv.drawArc({fillStyle:'rgba(51,153,255,0.3)',x:txc0,y:tyc0,radius:dst*r1/r2});
 			}
 		}
 	}
-	// draw fig1
-	if( $('input[name="draw-fig1"]').is(':checked')) {
-		let pfig1={strokeStyle:'#3c6',strokeWidth:1};
+	if (drawFig1) {
+		let pfig1={strokeStyle:'#6633cc',strokeWidth:1.5};
 		for(let wh=0;wh<q;wh+=1){
-			if (single&&wh) {
+			if (single&&drawWheels&&wh) {
 				continue;
 			}
 			let path={type:'line'};
@@ -86,7 +78,7 @@ function drawFront(jcv) {
 				let pv=pvs[(wh%q)*p+(s%p)];
 				path['x'+s]=pv[0];
 				path['y'+s]=pv[1];
-				if(single){
+				if(single&&drawWheels){
 					// draw radius
 					pfig1['p'+(1+s)]={type:'line',x1:xc0,y1:yc0,x2:pv[0],y2:pv[1]};
 				}
@@ -95,12 +87,10 @@ function drawFront(jcv) {
 		}
 		jcv.drawPath(pfig1);
 	}
-
-	// draw fig2
-	if( $('input[name="draw-fig2"]').is(':checked')) {
-		let pfig2={strokeStyle:'#39f',strokeWidth:1};
+	if (drawFig2) {
+		let pfig2={strokeStyle:'#3399ff',strokeWidth:1.5};
 		for(let s=0;s<p;s+=1){
-			if (single&&s) {
+			if (single&&drawWheels&&s) {
 				continue;
 			}
 			let path={type:'line'};
@@ -108,7 +98,7 @@ function drawFront(jcv) {
 				let pv=pvs[(wh%q)*p+s];
 				path['x'+wh]=pv[0];
 				path['y'+wh]=pv[1];
-				if(single){
+				if(single&&drawWheels){
 					// draw radius
 					pfig2['p'+(1+wh)]={type:'line',x1:txc0,y1:tyc0,x2:pv[0],y2:pv[1]};
 				}
@@ -122,39 +112,53 @@ function drawFront(jcv) {
 }
 
 function initVars(jcv) {
-	n=total*120;
+	n=total*63-1;
 	dst=$('#distance').val();
 	delay=$('#delay').val();
 	
 	q=total-p;
 	ratio=p/total;
 
-	r1=Math.floor(Math.min(jcv.height(),jcv.width())/2-2);
+	rr=Math.floor(Math.min(jcv.height(),jcv.width())/2-2);
 	xc=jcv.width()/2;
 	yc=jcv.height()/2;
-	r2=r1*ratio;
 
-	// scale distance relatively to r2
-	dst=r1/153*dst;
+	r1=rr*q/total;
+	r2=rr*p/total;
+
+	// scale distance relatively to r1 and change from wheel center
+	dst=r2-r1/153*dst;
 }
 
 function drawBack(jcv) {
 	initVars(jcv);
 	jcv.clearCanvas();
-	jcv.drawArc({strokeStyle:'#000',fillStyle:(p==fig1?'#eff':'#ffe'),strokeWidth:1,x:xc,y:yc,radius:r1});
-	if( $('input[name="draw-path"]').is(':checked')) {
+	if (single&&drawWheels&&dst>r2 ) {
+		jcv.drawArc({strokeStyle:'#000',fillStyle:(p==fig1?'#eeffff':'#ffffee'),x:xc,y:yc,radius:dst*rr/r2});
+	}
+	jcv.drawArc({strokeStyle:'#000',fillStyle:(dst<r2?p==fig1?'#eeffff':'#ffffee':'white'),x:xc,y:yc,radius:rr});
+	if (single&&drawWheels&&dst<r2 ) {
+		jcv.drawArc({strokeStyle:'#000',fillStyle:'white',x:xc,y:yc,radius:dst*rr/r2});
+	}
+	if (drawPath) {
 		drawHypo(jcv);
 	}
 }
 
 function drawF() {
+	drawDots=$('input[name="draw-points"]').is(':checked');
+	drawFig1=$('input[name="draw-fig1"]').is(':checked');
+	drawFig2=$('input[name="draw-fig2"]').is(':checked');
 	p=fig1;
 	drawFront($(cvfl));
 	p=fig2;
 	drawFront($(cvfr));
 }
 
-function draw() {
+function drawB() {
+	drawWheels=$('input[name="draw-wheels"]').is(':checked');
+	single=$('input[name="single"]').is(':checked');
+	drawPath=$('input[name="draw-path"]').is(':checked')
 	p=fig1;
 	drawBack($(cvbl));
 	p=fig2;
@@ -169,10 +173,9 @@ function start() {
 }
 
 function step() {
-	if(stopped){
+	if (stopped) {
 		return;
 	}
-	
 	drawF();
 
 	t+=1;t%=n;
@@ -198,7 +201,7 @@ $(document).ready(function() {
 	function updateTotal() {
 		if (fig1&&fig2) {
 			$('#total').val(total=fig1+fig2);
-			draw();
+			drawB();
 		}else{
 			$('#total').val('');
 		}
@@ -219,6 +222,7 @@ $(document).ready(function() {
 	$('#fig1').val('3').change();
 	$('#fig2').val('4').change();
 
-	draw();start();
+	drawB();
+	start();
 
 });
