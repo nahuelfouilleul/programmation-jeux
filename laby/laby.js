@@ -97,7 +97,7 @@ function init() {
   
   document.body.onkeydown = canvas_onkeydown;
   document.body.onmousemove = canvas_onmousemove;
-  document.body.ontouchmove = canvas_onmousemove;
+  document.body.ontouchstart = canvas_onmousemove;
   
 }
 function draw_player(c) {
@@ -153,8 +153,8 @@ function canvas_onkeydown(event) {
 }
 
 function canvas_onmousemove(event) {
-  diffx = Math.abs(event.clientX-x);
-  diffy = Math.abs(event.clientY-y);
+  diffx = Math.abs((event.clientX||event.touches[0].clientX)-x);
+  diffy = Math.abs((event.clientY||event.touches[0].clientY)-y);
   if (diffx>diffy) {
     if (event.clientX>x) {
       try_move(x+move_length,y);
