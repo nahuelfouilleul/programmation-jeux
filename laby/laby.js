@@ -97,6 +97,7 @@ function init() {
   
   document.body.onkeydown = canvas_onkeydown;
   document.body.onmousemove = canvas_onmousemove;
+  document.body.ontouchmove = canvas_onmousemove;
   
 }
 function draw_player(c) {
