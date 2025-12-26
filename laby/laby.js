@@ -169,6 +169,7 @@ function try_move(tx,ty) {
  
   if ( Math.abs(x-dots[goal][0])<move_length && Math.abs(y-dots[goal][1])<move_length*0.9 ) {
     endTime=new Date();
+    document.getElementById("eltime").innerHTML=(endTime-startTime)/1000;
     document.getElementById("message").innerHTML="Bravo!";
   }
 }
@@ -192,8 +193,8 @@ function canvas_onmousemove(event) {
   if ( endTime ) {
     return;
   }
-  ex = event.clientX || event.touches[0].clientX;
-  ey = event.clientY || event.touches[0].clientY;
+  ex = event.pageX || event.touches[0].pageX;
+  ey = event.pageY || event.touches[0].pageY;
   document.getElementById('ex').innerHTML=ex;
   document.getElementById('ey').innerHTML=ey;
   if (!ex || !ey || ex > canvas.width || ey > canvas.height) {
