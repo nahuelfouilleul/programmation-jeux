@@ -1,17 +1,32 @@
-<!doctype html>
-<html>
-<head>
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <script src="laby.js"></script>
 </head>
-<body onload="init()" bgcolor="#ccc">
+<body onload="init()" bgcolor="#bbd">
 <div style="display: flex">
 <div>
-<canvas id="canvas" width=900 height=600></canvas>
+<canvas id="canvas" width="900" height="600" style="background-color: #eef"></canvas>
 </div><div>
-<svg id="refresh" onclick="window.location=window.location.href"  width="50px" height="50px" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"><path d="M25 38c-7.2 0-13-5.8-13-13 0-3.2 1.2-6.2 3.3-8.6l1.5 1.3C15 19.7 14 22.3 14 25c0 6.1 4.9 11 11 11 1.6 0 3.1-.3 4.6-1l.8 1.8c-1.7.8-3.5 1.2-5.4 1.2z"/><path d="M34.7 33.7l-1.5-1.3c1.8-2 2.8-4.6 2.8-7.3 0-6.1-4.9-11-11-11-1.6 0-3.1.3-4.6 1l-.8-1.8c1.7-.8 3.5-1.2 5.4-1.2 7.2 0 13 5.8 13 13 0 3.1-1.2 6.2-3.3 8.6z"/><path d="M18 24h-2v-6h-6v-2h8z"/><path d="M40 34h-8v-8h2v6h6z"/></svg><br/>
-Nombre de coups: <span id="count"></span><br/>
+<select name="type" id="type" onchange="init()">
+  <option value="1">Rectangle 1</option>
+  <option value="2">Rectangle 2</option>
+  <option value="3">Circle</option>
+</select>
+<br/>
+<select name="level" id="level" onchange="init()">
+  <option value="1">Easy</option>
+  <option value="2">Medium</option>
+  <option value="3">Hard</option>
+</select>
+<br/>
+<svg id="refresh" onclick="init()" width="50px" height="50px" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"><path d="M25 38c-7.2 0-13-5.8-13-13 0-3.2 1.2-6.2 3.3-8.6l1.5 1.3C15 19.7 14 22.3 14 25c0 6.1 4.9 11 11 11 1.6 0 3.1-.3 4.6-1l.8 1.8c-1.7.8-3.5 1.2-5.4 1.2z"></path><path d="M34.7 33.7l-1.5-1.3c1.8-2 2.8-4.6 2.8-7.3 0-6.1-4.9-11-11-11-1.6 0-3.1.3-4.6 1l-.8-1.8c1.7-.8 3.5-1.2 5.4-1.2 7.2 0 13 5.8 13 13 0 3.1-1.2 6.2-3.3 8.6z"></path><path d="M18 24h-2v-6h-6v-2h8z"></path><path d="M40 34h-8v-8h2v6h6z"></path></svg><br>
+Nombre de coups: <span id="count">0</span><br/>
 Temps écoulé: <span id="eltime"></span>s<br/>
-Message: <span id="message"></span>
+Message: <span id="message"></span><br/>
+ex: <span id="ex"></span><br/>
+ey: <span id="ey"></span><br/>
 </div>
 </div>
-</body>
+
+</body></html>
