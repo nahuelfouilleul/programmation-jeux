@@ -14,7 +14,11 @@ function init_dots(type,level) {
   endTime=null;
 
   if (level<2) {
-    rows/=2;
+    if (type<3) {
+      rows/=2;
+    } else {
+      rows -=1;
+    }
     cols/=2;
     dots_space*=2;
     move_length*=2;
@@ -40,8 +44,8 @@ function init_dots(type,level) {
       ngbs=[];
       x=0;
  
-      if (i>0 && (type <3 || j%4==i%4) ) { ngbs[x++]=(i-1)*cols+j;}
-      if (i<rows-1 && (type <3 || j%4==(i+1)%4)) { ngbs[x++]=(i+1)*cols+j;}
+      if (i>0 && (type <3 || j%3==i%3 && i*cols+j!=goal) ) { ngbs[x++]=(i-1)*cols+j;}
+      if (i<rows-1 && (type <3 || j%3==(i+1)%3 && (i+1)*cols+j!=goal) ) { ngbs[x++]=(i+1)*cols+j;}
       if (type<3) {
         if (j>0&&(i+j)%4>0)      { ngbs[x++]=i*cols+j-1; }
         if (j<cols-1&&(i+j)%4<3) { ngbs[x++]=i*cols+j+1; }
@@ -62,7 +66,7 @@ function init_dots(type,level) {
       if (type<3) {
         dots[i*cols+j]=[dots_space*(j+.5),dots_space*(i+.5),ngbs];
       } else {
-        dots[i*cols+j]=[500+dots_space*(i+2)*Math.cos(2*Math.PI*j/cols),300+dots_space*(i+2)*Math.sin(2*Math.PI*j/cols),ngbs];
+        dots[i*cols+j]=[500+dots_space*(i+level*.75)*Math.cos(2*Math.PI*j/cols),300+dots_space*(i+level*.75)*Math.sin(2*Math.PI*j/cols),ngbs];
       }
     }
   }
@@ -200,6 +204,7 @@ function canvas_onmousemove(event) {
   if (!ex || !ey || ex > canvas.width || ey > canvas.height) {
     return;
   }
+  event.preventDefault();
   if (ex>x) {
     try_move(x+move_length,y);
   } else {
